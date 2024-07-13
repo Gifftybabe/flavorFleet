@@ -1,63 +1,32 @@
-// import express from "express";
-// import {addFood} from "../controllers/foodController.js";
-// import multer from "multer";
-
-// const foodRouter = express.Router();
-
-
-
-// // image storage engine
-
-// const storage = multer.diskStorage({
-//   destination:"uploads",
-//   filename:(req,file,cb)=>{
-//     return cb(null,`${Date.now()}${file.originalname}`);
-//   }
-// });
-
-// const upload = multer({storage:storage});
-
-// foodRouter.post("/add",upload.single("image"),addFood);
-
-// export default foodRouter;
-
-
-
-
 import express from "express";
-import { addFood,listFood } from "../controllers/foodController.js";
+import { addFood, listFood, removeFood } from "../controllers/foodController.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import foodModel from "../models/foodModel.js";
 
 const foodRouter = express.Router();
 
-// Ensure the uploads directory exists
 const uploadDir = path.resolve("uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
-  console.log(`Created directory: ${uploadDir}`);
-} else {
-  console.log(`Directory already exists: ${uploadDir}`);
 }
 
-// Image storage engine
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(`Saving to: ${uploadDir}`);
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const filename = `${Date.now()}-${file.originalname}`;
-    console.log(`Generated filename: ${filename}`);
     cb(null, filename);
   },
 });
 
 const upload = multer({ storage: storage });
 
+// Debugging log
+console.log("Registering route: POST /add");
 foodRouter.post("/add", upload.single("image"), (req, res, next) => {
+  console.log("Inside POST /add route");
   if (req.file) {
     console.log("File uploaded successfully:", req.file);
     next();
@@ -66,6 +35,17 @@ foodRouter.post("/add", upload.single("image"), (req, res, next) => {
     res.status(400).send("File upload failed");
   }
 }, addFood);
-foodRouter.get("/list",listFood)
+
+console.log("Registering route: GET /list");
+foodRouter.get("/list", (req, res, next) => {
+  console.log("Inside GET /list route");
+  next();
+}, listFood);
+
+console.log("Registering route: POST /remove");
+foodRouter.post("/remove", (req, res, next) => {
+  console.log("Inside POST /remove route with body:", req.body);
+  next();
+}, removeFood);
 
 export default foodRouter;
