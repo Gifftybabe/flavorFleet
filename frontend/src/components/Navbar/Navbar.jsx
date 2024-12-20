@@ -7,31 +7,20 @@ import { StoreContext } from "../../context/StoreContext";
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
 
-
-  const {getTotalCartAmount,token,setToken} = useContext(StoreContext)
+  const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
 
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
     setToken("");
-    navigate("/")
-
-  const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
-
-  const navigate = useNavigate()
-
-  const logout = () => {
-    localStorage.removeItem('token')
-    setToken("")
-    navigate('/')
-
-  }
+    navigate("/");
+  };
 
   return (
     <div className="navbar">
       <Link to="/">
-        <img src={assets.logo} alt="" />
+        <img src={assets.logo} alt="Logo" />
       </Link>
       <ul className="navbar-menu">
         <Link
@@ -39,70 +28,57 @@ const Navbar = ({ setShowLogin }) => {
           onClick={() => setMenu("home")}
           className={menu === "home" ? "active" : ""}
         >
-          home
+          Home
         </Link>
         <a
           href="#explore-menu"
           onClick={() => setMenu("menu")}
           className={menu === "menu" ? "active" : ""}
         >
-          menu
+          Menu
         </a>
         <a
           href="#app-download"
           onClick={() => setMenu("mobile-app")}
           className={menu === "mobile-app" ? "active" : ""}
         >
-          mobile-app
+          Mobile App
         </a>
         <a
           href="#footer"
           onClick={() => setMenu("contact-us")}
           className={menu === "contact-us" ? "active" : ""}
         >
-          contact us
+          Contact Us
         </a>
       </ul>
       <div className="navbar-right">
-        <img src={assets.search_icon} alt="" />
+        <img src={assets.search_icon} alt="Search" />
         <div className="navbar-search-icon">
           <Link to="/cart">
-            <img src={assets.basket_icon} alt="" />
+            <img src={assets.basket_icon} alt="Basket" />
           </Link>
           <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
         </div>
 
-        {!token?<button onClick={() => setShowLogin(true)}>sign in</button>
-        : <div className="navbar-profile">
-          <img src={assets.profile_icon} alt="" />
-          <ul className="nav-profile-dropdown">
-            <li><img src={assets.bag_icon} alt="" /><p>Order</p></li>
-            <hr />
-            <li onClick={logout}><img src={assets.logout_icon} alt="" /><p>Logout</p></li>
-          </ul>
-        </div>
-        }
-        
-
         {!token ? (
-          <button onClick={() => setShowLogin(true)}>sign in</button>
+          <button onClick={() => setShowLogin(true)}>Sign In</button>
         ) : (
           <div className="navbar-profile">
-            <img src={assets.profile_icon} alt="sign in profile" />
+            <img src={assets.profile_icon} alt="Profile" />
             <ul className="nav-profile-dropdown">
               <li>
-                <img src={assets.bag_icon} alt="asset bag" />
+                <img src={assets.bag_icon} alt="Orders" />
                 <p>Orders</p>
               </li>
               <hr />
               <li onClick={logout}>
-                <img src={assets.logout_icon} alt="logout" />
+                <img src={assets.logout_icon} alt="Logout" />
                 <p>Logout</p>
               </li>
             </ul>
           </div>
         )}
-
       </div>
     </div>
   );
